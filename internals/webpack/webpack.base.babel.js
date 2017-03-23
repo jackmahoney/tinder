@@ -4,6 +4,11 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const fs = require('fs');
+const config = require('config');
+const CONFIG_PATH = path.resolve(__dirname, '../../build/client.json');
+fs.writeFileSync(CONFIG_PATH, JSON.stringify(config));
+
 
 module.exports = (options) => ({
   entry: options.entry,
@@ -69,6 +74,9 @@ module.exports = (options) => ({
   postcss: () => options.postcssPlugins,
   resolve: {
     modules: ['app', 'node_modules'],
+    alias: {
+      config: CONFIG_PATH,
+    },
     extensions: [
       '',
       '.js',

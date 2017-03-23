@@ -5,10 +5,8 @@ import { LOGIN_FACEBOOK, LOGIN_LOCAL, LOGIN_CHROME } from './constants';
 import { loginFacebookSuccess, loginFacebookError } from './actions';
 import { postRequest } from 'utils/request';
 import { storeToken, getToken } from 'utils/storage';
-import { AUTH_URL } from 'global_constants';
 import { selectLogin, selectPassword } from './selectors';
-
-const CHROME_EXTENSION_ID = 'ijolldjdhcdcceonmopahocncafnlike';
+import { AUTH_URL, CHROME_EXTENSION_ID } from 'global_constants';
 
 function* storeTokensSaga({ authToken, fbToken }) {
   yield storeToken('tinderToken', authToken);

@@ -2,7 +2,7 @@
 
 const express = require('express');
 const logger = require('./logger');
-
+const Config = require('config');
 const argv = require('minimist')(process.argv.slice(2));
 const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -27,7 +27,7 @@ setup(app, {
 });
 
 // get the intended port number, use port 3000 if not provided
-const port = argv.port || process.env.PORT || 3000;
+const port = argv.port || process.env.PORT || Config.get('port');
 
 // Start your app.
 app.listen(port, (err) => {

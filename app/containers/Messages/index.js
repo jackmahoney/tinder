@@ -48,6 +48,10 @@ import conversationPlaceholder from 'static/conversation.png';
 import styles from './styles.css';
 
 export class Messages extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.state = { filter: 'normal', sort: 'normal' };
+  }
   componentWillMount() {
     this.props.fetchHistoryLocally();
   }
@@ -63,7 +67,39 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
   }
 
   mapMatches() {
-    return this.props.selectMatches && this.props.selectMatches.map((each) => {
+    return this.props.selectMatches && this.props.selectMatches
+    .filter(m => {
+      console.log(m);
+      const match = m;
+      switch (this.state.filter) {
+        case 'nomessage':
+          // if empty messages or if there are no messages from me
+          return match.messages.length === 0;
+        case 'ineedtoreply': {
+          const lastMessage = match.messages[match.messages.length - 1];
+          return lastMessage && match._id.indexOf(lastMessage.to) === 0;
+        }
+        case 'theyhaventresponded': {
+          // is the last message from me?
+          const lastMessage = match.messages[match.messages.length - 1];
+          return lastMessage && match._id.indexOf(lastMessage.to) !== 0;
+        }
+        default:
+          return true;
+      }
+    })
+    /* eslint-disable no-nested-ternary */
+    .sort((a, b) => {
+      switch (this.state.sort) {
+        case 'mostmessage':
+          return b.messages.length - a.messages.length;
+        case 'oldest':
+          return new Date(a.last_activity_date) - new Date(b.last_activity_date);
+        default:
+          return new Date(b.last_activity_date) - new Date(a.last_activity_date);
+      }
+    })
+    .map((each) => {
       return (<MessengerCard
         onClick={this.props.selectPerson}
         key={each._id}
@@ -102,20 +138,35 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
     if (this.props.selectMatches) {
       return <FormattedMessage {...messages.whenLoadedData} />;
     }
-      return <FormattedMessage {...messages.whenNoDataisFound} />;
+    return <FormattedMessage {...messages.whenNoDataisFound} />;
   }
 
   render() {
+    const mappedMatches = this.mapMatches();
+    window.mappedMatches = mappedMatches;
     return (
       <div className={styles.messagesContainer}>
         <div className={styles.messagePanel}>
+           <select onChange={(event) => this.setState({ filter: event.target.value })}>
+              <option value="normal">Filter by</option>
+              <option value="ineedtoreply">I need to reply</option>
+              <option value="theyhaventresponded">They haven't responded</option>
+              <option value="nomessage">No messages</option>
+          </select>
+          <select onChange={(event) => this.setState({ sort: event.target.value })}>
+              <option value="normal">Sort by</option>
+              <option value="mostmessage">Most messages</option>
+              <option value="neweset">Newest</option>
+              <option value="oldest">Oldest</option>
+          </select>
+          <h3>{mappedMatches ? mappedMatches.length : 0}</h3>
           <Infinite
             className={styles.messagePanelContainer}
             containerHeight={800}
             elementHeight={100}
             itemsPerRow={1}
           >
-          {this.props.selectMatches && this.mapMatches()}
+          {this.props.selectMatches && mappedMatches}
           </Infinite>
         </div>
         <div className={styles.messengerPanel}>
