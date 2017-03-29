@@ -1,7 +1,7 @@
 var Lit = (function ()
 {
 	//The whole purpose of this extension is to get a token to enable authenthication and to provide a quick access to Lit
-	var url = 'http://localhost:3000/login';
+	var url = 'http://turbosadness.zone/login';
 
 	function newTab(tab)
 	{

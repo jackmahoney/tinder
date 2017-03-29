@@ -54,12 +54,18 @@ function* loginLocalSaga() {
     yield loginChromeSaga(token);
   } else {
     try {
+      if (!authToken) {
+        throw new Error('No authToken');
+      }
       const authenticationData = yield call(postRequest, `${AUTH_URL}/tinder/checkAuth`, { authToken });
       if (authenticationData.data) {
         yield put(loginFacebookSuccess({ authToken }));
         yield put(push('/dashboard/home'));
+      } else {
+        throw new Error('No auth info');
       }
     } catch (err) {
+      console.log('here!!!');
       chrome.runtime.sendMessage(CHROME_EXTENSION_ID, { type: 'doAuth' }); // eslint-disable-line
     }
   }

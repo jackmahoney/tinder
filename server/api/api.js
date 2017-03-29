@@ -135,7 +135,10 @@ router.post('/tinder/checkAuth', (req, res) => {
   client.setAuthToken(xAuth);
   tinderPromise.getUserFromId(client, 1)
   .then((response) => res.status(200).json(response))
-  .catch((error) => res.status(400).json(error));
+  .catch((error) => {
+    console.log(error);
+    return res.status(400).json(error);
+  });
 });
 
 router.post('/tinder/update/bio', (req, res) => {

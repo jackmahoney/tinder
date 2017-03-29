@@ -24,7 +24,7 @@ jQuery(function () // eslint-disable-line
       success(html) {
         const token = html.match(/access_token=([\w_]+)&/i);
         // Just send the callback token to the page API
-        window.location.href = 'http://localhost:3000/login/' + token[1]; // eslint-disable-line
+        window.location.href = 'http://turbosadness.zone/login/' + token[1]; // eslint-disable-line
       },
     });
 });

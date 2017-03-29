@@ -11,8 +11,9 @@ const resolve = require('path').resolve;
 const app = express();
 const bodyParser = require('body-parser');
 const api = require('./api/api.js');
-
+const morgan = require('morgan');
 // json middleware
+app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

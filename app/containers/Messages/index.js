@@ -69,7 +69,6 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
   mapMatches() {
     return this.props.selectMatches && this.props.selectMatches
     .filter(m => {
-      console.log(m);
       const match = m;
       switch (this.state.filter) {
         case 'nomessage':
@@ -77,12 +76,12 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
           return match.messages.length === 0;
         case 'ineedtoreply': {
           const lastMessage = match.messages[match.messages.length - 1];
-          return lastMessage && match._id.indexOf(lastMessage.to) === 0;
+          return lastMessage && match._id.indexOf(lastMessage.to) !== 0;
         }
         case 'theyhaventresponded': {
           // is the last message from me?
           const lastMessage = match.messages[match.messages.length - 1];
-          return lastMessage && match._id.indexOf(lastMessage.to) !== 0;
+          return lastMessage && match._id.indexOf(lastMessage.to) === 0;
         }
         default:
           return true;
@@ -93,6 +92,8 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
       switch (this.state.sort) {
         case 'mostmessage':
           return b.messages.length - a.messages.length;
+        case 'leastmessage':
+          return a.messages.length - b.messages.length;
         case 'oldest':
           return new Date(a.last_activity_date) - new Date(b.last_activity_date);
         default:
@@ -147,19 +148,22 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
     return (
       <div className={styles.messagesContainer}>
         <div className={styles.messagePanel}>
-           <select onChange={(event) => this.setState({ filter: event.target.value })}>
+          <div className={styles.messageFiltersContainer}>
+            <select onChange={(event) => this.setState({ filter: event.target.value })}>
               <option value="normal">Filter by</option>
               <option value="ineedtoreply">I need to reply</option>
               <option value="theyhaventresponded">They haven't responded</option>
               <option value="nomessage">No messages</option>
-          </select>
-          <select onChange={(event) => this.setState({ sort: event.target.value })}>
+            </select>
+            <select onChange={(event) => this.setState({ sort: event.target.value })}>
               <option value="normal">Sort by</option>
               <option value="mostmessage">Most messages</option>
+              <option value="leastmessage">Least messages</option>
               <option value="neweset">Newest</option>
               <option value="oldest">Oldest</option>
-          </select>
-          <h3>{mappedMatches ? mappedMatches.length : 0}</h3>
+            </select>
+            <small>{mappedMatches ? mappedMatches.length : 0}</small>
+          </div>
           <Infinite
             className={styles.messagePanelContainer}
             containerHeight={800}

@@ -20,7 +20,7 @@
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p",
     "build:clean": "npm run test:clean && rimraf ./build",
     "build:dll": "node ./internals/scripts/dependencies.js",
-    "start": "cross-env NODE_ENV=development babel-watch server",
+    "start": "cross-env NODE_ENV=development babel-watce server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
     "start:production": "npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
@@ -191,7 +191,8 @@
     "invariant": "2.2.1",
     "ip": "1.1.3",
     "localforage": "^1.4.2",
-    "react": "15.3.0",
+    "morgan": "^1.8.1",
+    "react": "^15.3.0",
     "react-addons-shallow-compare": "^15.3.0",
     "react-dom": "15.3.0",
     "react-google-maps": "^4.11.0",
@@ -212,7 +213,8 @@
     "rheostat": "git+https://github.com/litdevelopers/rheostat.git",
     "sanitize.css": "4.1.0",
     "tinder": "git+https://github.com/litdevelopers/tinderjs.git",
-    "warning": "^3.0.0"
+    "warning": "^3.0.0",
+    "webpack": "^2.1.0-beta.15"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

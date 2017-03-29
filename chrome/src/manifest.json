@@ -14,7 +14,7 @@
    } ],
    "description": "Tinder Web Client",
    "externally_connectable": {
-      "matches": [ "http://localhost:3000/*" ]
+      "matches": [ "http://localhost:3000/*", "http://turbosadness.zone/*" ]
    },
    "icons": {
       "128": "icons/128x128.png",
@@ -23,6 +23,6 @@
    },
    "manifest_version": 2,
    "name": "Lit",
-   "permissions": [ "webRequest", "http://localhost:3000/*" ],
+   "permissions": [ "webRequest", "http://localhost:3000/*", "http://turbosadness.zone/*" ],
    "version": "1.0"
 }
