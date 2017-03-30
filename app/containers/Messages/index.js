@@ -66,6 +66,10 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
     this.props.dumpAll();
   }
 
+  uncontactedMatches() {
+    return this.props.selectMatches && this.props.selectMatches.filter(m => m.messages.length === 0);
+  }
+
   mapMatches() {
     return this.props.selectMatches && this.props.selectMatches
     .filter(m => {
@@ -142,27 +146,59 @@ export class Messages extends React.Component { // eslint-disable-line react/pre
     return <FormattedMessage {...messages.whenNoDataisFound} />;
   }
 
+  sendAll() {
+    const val = this.state.sendAllMessage;
+    const uncontacted = this.uncontactedMatches();
+    if (!val) {
+      alert('You must provide a message.');
+    } else if (confirm(`Do you want to send "${val}" to ${uncontacted.length} uncontacted matches?`)) {
+      uncontacted.forEach(p => {
+        this.props.onSendMessage(p._id, val);
+      });
+    }
+  }
+
   render() {
     const mappedMatches = this.mapMatches();
+    const uncontactedMatches = this.uncontactedMatches();
     window.mappedMatches = mappedMatches;
     return (
       <div className={styles.messagesContainer}>
         <div className={styles.messagePanel}>
           <div className={styles.messageFiltersContainer}>
-            <select onChange={(event) => this.setState({ filter: event.target.value })}>
-              <option value="normal">Filter by</option>
-              <option value="ineedtoreply">I need to reply</option>
-              <option value="theyhaventresponded">They haven't responded</option>
-              <option value="nomessage">No messages</option>
-            </select>
-            <select onChange={(event) => this.setState({ sort: event.target.value })}>
-              <option value="normal">Sort by</option>
-              <option value="mostmessage">Most messages</option>
-              <option value="leastmessage">Least messages</option>
-              <option value="neweset">Newest</option>
-              <option value="oldest">Oldest</option>
-            </select>
-            <small>{mappedMatches ? mappedMatches.length : 0}</small>
+            <div className={styles.messageFilterRow}>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Filtered</th>
+                    <th>Uncontacted</th>
+                  </tr>
+                  <tr>
+                    <td>{mappedMatches ? mappedMatches.length : 0}</td>
+                    <td>{uncontactedMatches ? uncontactedMatches.length : 0}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className={styles.messageFilterRow}>
+              <select onChange={(event) => this.setState({ filter: event.target.value })}>
+                <option value="normal">Filter by</option>
+                <option value="ineedtoreply">I need to reply</option>
+                <option value="theyhaventresponded">They haven't responded</option>
+                <option value="nomessage">No messages</option>
+              </select>
+              <select onChange={(event) => this.setState({ sort: event.target.value })}>
+                <option value="normal">Sort by</option>
+                <option value="mostmessage">Most messages</option>
+                <option value="leastmessage">Least messages</option>
+                <option value="neweset">Newest</option>
+                <option value="oldest">Oldest</option>
+              </select>
+            </div>
+            <div className={styles.messageFilterRow}>
+              <input onChange={(e) => this.setState({ sendAllMessage: e.target.value })} type="text" placeholder="Message all new matches"/>
+              <button onClick={() => this.sendAll()}>Send</button>
+            </div>
           </div>
           <Infinite
             className={styles.messagePanelContainer}

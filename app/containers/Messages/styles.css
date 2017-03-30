@@ -72,15 +72,16 @@
 .messageFiltersContainer{
     background-color: white;
     border-bottom: 1px solid #eee;
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    width: 100%;
+
 }
 .messageFiltersContainer select{
   max-width: 50%;
   overflow: hidden;
+}
+.messageFilterRow{
+  margin-bottom: 5px;
+}
+.messageFilterRow table{
+  width: 100%;
+  text-align: center;
 }
