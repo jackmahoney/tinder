@@ -7,6 +7,7 @@ import { postRequest } from 'utils/request';
 import { storeToken, getToken } from 'utils/storage';
 import { selectLogin, selectPassword } from './selectors';
 import { AUTH_URL, CHROME_EXTENSION_ID } from 'global_constants';
+import queryString from 'query-string';
 
 function* storeTokensSaga({ authToken, fbToken }) {
   yield storeToken('tinderToken', authToken);
@@ -65,8 +66,10 @@ function* loginLocalSaga() {
         throw new Error('No auth info');
       }
     } catch (err) {
-      console.log('here!!!');
-      chrome.runtime.sendMessage(CHROME_EXTENSION_ID, { type: 'doAuth' }); // eslint-disable-line
+      const query = queryString.parse(location.search);
+      const chromeId = query ? query.chromeExtId : CHROME_EXTENSION_ID;
+      console.log('ChromeId === ' + chromeId);
+      chrome.runtime.sendMessage(chromeId, { type: 'doAuth' }); // eslint-disable-line
     }
   }
 }
